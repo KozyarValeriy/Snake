@@ -2,11 +2,12 @@
     Скрипт с описанием класса для змейки.
 """
 from collections import Counter
+from abc import ABC, abstractmethod
 
-from body import BodyList
+from body import Body, BodyList
 
 
-class Snake:
+class Snake(ABC):
 
     def __init__(self, max_x: int, max_y: int, symbol: str = "▪", preset_count: int = 3):
         """ Метод инициализации змейки
@@ -19,11 +20,17 @@ class Snake:
         self._max_x = max_x
         self._max_y = max_y
         self._symbol = symbol
-        self._body = BodyList()
+
+        self._body = self._set_body()
         # наполнение тела змейки
         self._preset_body(preset_count)
         # было ли столкновение
         self._incident = False
+
+    @abstractmethod
+    def _set_body(self) -> Body:
+        """ Метод для получения элемента для тела змейки """
+        pass
 
     @property
     def incident(self) -> bool:
@@ -35,9 +42,13 @@ class Snake:
         """ Свойство для получения символа для отрисовки змейки """
         return self._symbol
 
-    def get_body(self):
+    def get_body(self) -> list:
         """ Метод для получения списка координат тела змейки """
         return self._body.to_list()
+
+    def get_head(self) -> tuple:
+        """ Метод для получения первого элемента """
+        return self._body.get_first()
 
     def _preset_body(self, preset_count: int):
         """ Метод для получения начальных звеньев в змейке
@@ -86,3 +97,9 @@ class Snake:
         if any(value > 1 for value in Counter(self._body.to_list()).values()):
             # Если пересекли саму себя
             self._incident = True
+
+
+class SnakeList(Snake):
+    def _set_body(self) -> Body:
+        """ Метод для получения элемента для тела змейки """
+        return BodyList()

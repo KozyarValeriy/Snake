@@ -7,7 +7,11 @@ import copy
 from pynput.keyboard import Key, Listener
 
 
-from snake import Snake
+from snake import Snake, SnakeList
+
+
+# Константа с классом для змейки
+SNAKE_CLASS = SnakeList
 
 # определние функции для расчета времени на основе операционной системы
 time_func = time.perf_counter if sys.platform.startswith('win') else time.time
@@ -128,18 +132,18 @@ def generate_eat(size: tuple, snake_head: tuple) -> tuple:
     return eat
 
 
-def main(size: tuple):
-    snake = Snake(max_x=size[0], max_y=size[1])
+def main(size: tuple, snake_class: type(Snake)):
+    snake = snake_class(max_x=size[0], max_y=size[1])
     score = 0
     grid = get_grid(size=size)
-    eat = generate_eat(size=size, snake_head=snake.get_body()[0])
+    eat = generate_eat(size=size, snake_head=snake.get_head())
     delay = 0.2
     with Listener(on_press=on_press):
         while not snake.incident:
             if timer(delay=delay):
-                if eat == snake.get_body()[0]:
+                if eat == snake.get_head():
                     snake.move(_direction, grow=True)
-                    eat = generate_eat(size=size, snake_head=snake.get_body()[0])
+                    eat = generate_eat(size=size, snake_head=snake.get_head())
                     score += 1
                     if score % 3 == 0 and delay > 0.05:
                         delay = round(delay - 0.02, 2)
@@ -151,4 +155,4 @@ def main(size: tuple):
 
 
 if __name__ == "__main__":
-    main((20, 20))
+    main((20, 20), SNAKE_CLASS)
