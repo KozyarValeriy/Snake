@@ -79,11 +79,8 @@ def timer(delay=0.15) -> bool:
 
     :param delay: задержка в секундах.
     """
-    try:
-        # пробуем получить атрибут функции
-        getattr(timer, 'time')
-    except AttributeError:
-        # если его нет, то добавляем атрибут и записываем в него время
+    if not hasattr(timer, 'time'):
+        # если аттрибута нет, то добавляем атрибут и записываем в него время
         timer.time = time_func()
     if time_func() - timer.time > delay:
         timer.time = time_func()
