@@ -13,7 +13,7 @@ from snake import Snake, SnakeList
 # Константа с классом для змейки
 SNAKE_CLASS = SnakeList
 
-# определние функции для расчета времени на основе операционной системы
+# определение функции для расчета времени на основе операционной системы
 time_func = time.perf_counter if sys.platform.startswith('win') else time.time
 
 # начальные значения переменных
